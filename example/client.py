@@ -11,6 +11,17 @@ if __name__ == "__main__":
         response = remote_hist.fill(
             x=np.random.normal(size=1_000_000).astype(np.float64),
             y=np.random.normal(size=1_000_000).astype(np.float64),
+            dataset="data",
+            weight=np.ones(1_000_000, dtype=np.float64),
+        )
+        print(f"Histogram remote_hist received: {response.message}\n")
+
+        # fill histogram remotely again with different dataset
+        response = remote_hist.fill(
+            x=np.random.normal(size=1_000_000).astype(np.float64),
+            y=np.random.normal(size=1_000_000).astype(np.float64),
+            dataset="drell-yan",
+            weight=np.ones(1_000_000, dtype=np.float64),
         )
         print(f"Histogram remote_hist received: {response.message}\n")
 

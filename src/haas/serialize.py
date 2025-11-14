@@ -1,22 +1,28 @@
 from __future__ import annotations
 
+import typing as tp
 import numpy as np
 
 from haas.protos import hist_pb2
 
 
-def serialize_ndarray(array) -> hist_pb2.ndarray:
-    """Serialize a numpy ndarray into a hist_pb2.ndarray message."""
-
-    if not isinstance(array, np.ndarray):
-        raise TypeError("Input must be a numpy ndarray.")
-
-    shape = list(array.shape)
-    dtype = _numpy_dtype_to_proto_dtype(array.dtype)
-
-    data = array.tobytes()
-
-    return hist_pb2.ndarray(shape=shape, dtype=dtype, data=data)
+def serialize(item: tp.Any) -> hist_pb2.Value:
+    """Serialize something into a hist_pb2.Value message."""
+    msg = hist_pb2.Value()
+    if isinstance(item, np.ndarray):
+        shape = list(item.shape)
+        dtype = _numpy_dtype_to_proto_dtype(item.dtype)
+        data = item.tobytes()
+        msg.array_value.CopyFrom(hist_pb2.ndarray(shape=shape, dtype=dtype, data=data))
+    elif isinstance(item, str):
+        msg.string_value = item
+    elif isinstance(item, int):
+        msg.int_value = item
+    elif isinstance(item, bool):
+        msg.bool_value = item
+    else:
+        raise TypeError(f"Can't serialize: {item}")
+    return msg
 
 
 def _numpy_dtype_to_proto_dtype(np_dtype: np.dtype) -> hist_pb2.dtype:
@@ -34,18 +40,23 @@ def _numpy_dtype_to_proto_dtype(np_dtype: np.dtype) -> hist_pb2.dtype:
             raise ValueError(f"Unsupported numpy dtype: {np_dtype}")
 
 
-def deserialize_ndarray(message: hist_pb2.ndarray):
-    """Deserialize a hist_pb2.ndarray message into a numpy ndarray."""
-
-    if not isinstance(message, hist_pb2.ndarray):
-        raise TypeError("Input must be a hist_pb2.ndarray message.")
-
-    shape = tuple(message.shape)
-    dtype = _proto_dtype_to_numpy_dtype(message.dtype)
-
-    array = np.frombuffer(message.data, dtype=dtype).reshape(shape)
-
-    return array
+def deserialize(message: hist_pb2.Value):
+    """Deserialize a hist_pb2.Value message into a numpy ndarray, str or int."""
+    match message.WhichOneof("value"):
+        case "array_value":
+            ndarray = message.array_value
+            shape = tuple(ndarray.shape)
+            dtype = _proto_dtype_to_numpy_dtype(ndarray.dtype)
+            array = np.frombuffer(ndarray.data, dtype=dtype).reshape(shape)
+            return array
+        case "string_value":
+            return message.string_value
+        case "int_value":
+            return message.int_value
+        case "bool_value":
+            return message.bool_value
+        case _:
+            raise ValueError("Unsupported Value type")
 
 
 def _proto_dtype_to_numpy_dtype(proto_dtype: hist_pb2.dtype) -> np.dtype:

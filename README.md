@@ -13,30 +13,58 @@ Start gRPC server (or just `./example/start_server.sh`):
 ```shell
 haas-server --port 50051 --max-workers 1 --hist-ir "$(cat example/hist_ir.json)"
 # INFO:haas-server:Histogram setup successfully: Hist(
-#   Regular(50, -5, 5, name='x', label='X Axis'),
-#   Regular(50, -5, 5, name='y', label='Y Axis'),
-#   storage=Double())
+#   Regular(10, -2, 2, name='x', label='X Axis'),
+#   Regular(10, -2, 2, name='y', label='Y Axis'),
+#   StrCategory(['data', 'drell-yan'], overflow=False, name='dataset', label='Dataset'),
+#   storage=Weight()) # Sum: WeightedSum(value=0, variance=0)
 # INFO:haas-server:Histogram server started, listening on [::]:50051 with max_workers=1
 ```
 
 Run example client:
 ```shell
 python example/client.py
-# Histogram remote_hist received: Histogram filled {'y': array([-0.4310625 , -0.54584864, -1.6486728 , ...,  1.42684052,
-#        -1.38751229,  0.42781165], shape=(1000000,)), 'x': array([ 0.88761779,  0.1662822 ,  0.83310628, ..., -2.05403307,
-#         1.79718163, -1.08342469], shape=(1000000,))} successfully! Now is: Hist(
-#   Regular(50, -5, 5, name='x', label='X Axis'),
-#   Regular(50, -5, 5, name='y', label='Y Axis'),
-#   storage=Double()) # Sum: 1000000.0
+# Histogram remote_hist received: Histogram filled {'y': array([ 0.88330122, -0.13018699,  0.30395399, ...,  0.05815926,
+#         0.0319339 ,  0.6173756 ], shape=(1000000,)), 'x': array([-0.39557326, -1.10047103, -0.25452045, ..., -0.91580713,
+#         0.85419406,  0.14931346], shape=(1000000,)), 'weight': array([1., 1., 1., ..., 1., 1., 1.], shape=(1000000,)), 'dataset': # 'data'} successfully! Now is: Hist(
+#   Regular(10, -2, 2, name='x', label='X Axis'),
+#   Regular(10, -2, 2, name='y', label='Y Axis'),
+#   StrCategory(['data', 'drell-yan'], overflow=False, name='dataset', label='Dataset'),
+#   storage=Weight()) # Sum: WeightedSum(value=911141, variance=911141) (WeightedSum(value=1e+06, variance=1e+06) with flow)
+
+# Histogram remote_hist received: Histogram filled {'y': array([-0.7015261 , -2.24620403, -1.44075752, ..., -1.01488795,
+#         1.04233221,  1.71569615], shape=(1000000,)), 'x': array([ 0.505213  ,  0.90704077, -0.84626962, ..., -0.89036558,
+#         1.0678381 , -0.04706042], shape=(1000000,)), 'weight': array([1., 1., 1., ..., 1., 1., 1.], shape=(1000000,)), 'dataset': 'drell-yan'} successfully! Now is: Hist(
+#   Regular(10, -2, 2, name='x', label='X Axis'),
+#   Regular(10, -2, 2, name='y', label='Y Axis'),
+#   StrCategory(['data', 'drell-yan'], overflow=False, name='dataset', label='Dataset'),
+#   storage=Weight()) # Sum: WeightedSum(value=1.82276e+06, variance=1.82276e+06) (WeightedSum(value=2e+06, variance=2e+06) with flow)
 #
 # Histogram remote_hist received: Histogram flushed successfully to hist.coffea.
 ```
 
 And the server logs additionally (after running the client script):
 ```shell
-# INFO:haas-server:Filled histogram with 16,000,000 bytes
+# INFO:haas-server:Filled histogram with 24,000,000 bytes
+# INFO:haas-server:Filled histogram with 24,000,000 bytes
 # INFO:haas-server:Flushed histogram to hist.coffea
 ```
+
+## Current supported types
+
+Axis support:
+- `hist.axis.Regular`
+- `hist.axis.Boolean`
+- `hist.axis.Variable`
+- `hist.axis.Integer`
+- `hist.axis.IntCategory`
+- `hist.axis.StrCategory`
+
+`np.dtype` support for `hist.axis.{Regular,Variable,Integer}`:
+- `np.float64`
+- `np.float32`
+- `np.int64`
+- `np.int32`
+
 
 ## Developer Info
 

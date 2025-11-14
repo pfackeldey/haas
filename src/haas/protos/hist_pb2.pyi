@@ -14,11 +14,11 @@ class FillRequest(_message.Message):
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
-        value: ndarray
-        def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[ndarray, _Mapping]] = ...) -> None: ...
+        value: Value
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[Value, _Mapping]] = ...) -> None: ...
     KWARGS_FIELD_NUMBER: _ClassVar[int]
-    kwargs: _containers.MessageMap[str, ndarray]
-    def __init__(self, kwargs: _Optional[_Mapping[str, ndarray]] = ...) -> None: ...
+    kwargs: _containers.MessageMap[str, Value]
+    def __init__(self, kwargs: _Optional[_Mapping[str, Value]] = ...) -> None: ...
 
 class FlushRequest(_message.Message):
     __slots__ = ("destination",)
@@ -59,3 +59,13 @@ class ndarray(_message.Message):
     dtype: dtype
     data: bytes
     def __init__(self, shape: _Optional[_Iterable[int]] = ..., dtype: _Optional[_Union[dtype, _Mapping]] = ..., data: _Optional[bytes] = ...) -> None: ...
+
+class Value(_message.Message):
+    __slots__ = ("array_value", "string_value", "int_value")
+    ARRAY_VALUE_FIELD_NUMBER: _ClassVar[int]
+    STRING_VALUE_FIELD_NUMBER: _ClassVar[int]
+    INT_VALUE_FIELD_NUMBER: _ClassVar[int]
+    array_value: ndarray
+    string_value: str
+    int_value: int
+    def __init__(self, array_value: _Optional[_Union[ndarray, _Mapping]] = ..., string_value: _Optional[str] = ..., int_value: _Optional[int] = ...) -> None: ...

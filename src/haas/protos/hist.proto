@@ -11,7 +11,7 @@ service Histogrammer {
 // The request message containing the values to fill the histogram.
 // This map is essentially **kwargs that is passed to histogram.fill(**kwargs)
 message FillRequest {
-    map<string, ndarray> kwargs = 1;
+    map<string, Value> kwargs = 1;
 }
 
 // The request message for flushing the histogram.
@@ -25,6 +25,7 @@ message Result {
     string message = 2; // additional information or error message
 }
 
+// Data type representation (just a small subset for now)
 message dtype {
     enum Type {
         // add more types as needed
@@ -37,10 +38,21 @@ message dtype {
     Type type = 2;
 }
 
+
+// A simple representation of a NumPy ndarray (we're ignoring endianness and other complexities for brevity)
 message ndarray {
     repeated int64 shape = 1;
     dtype dtype = 2;
     bytes data = 3;
 }
 
+
+message Value {
+    oneof value {
+        ndarray array_value = 1; // for array values (e.g., regular/variable/integer axes)
+        string string_value = 2; // for string values (e.g., str category axes)
+        int64 int_value = 3;   // for integer values (e.g., int category axes)
+        bool bool_value = 4;  // for boolean values (e.g., boolean axes axes)
+    }
+}
 

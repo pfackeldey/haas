@@ -7,9 +7,10 @@ import cloudpickle
 import fsspec
 import hist
 import grpc
+import numpy as np
 from haas.protos import hist_pb2_grpc, hist_pb2
 
-from haas.serialize import deserialize_ndarray
+from haas.serialize import deserialize
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("haas-server")
@@ -26,18 +27,18 @@ class Histogrammer(hist_pb2_grpc.HistogrammerServicer):
         del context  # unused
 
         try:
-            # Deserialize the ndarrays from the request
-            kwargs = {
-                key: deserialize_ndarray(array_msg)
-                for key, array_msg in request.kwargs.items()
-            }
+            # Deserialize the message from the request
+            kwargs = {key: deserialize(msg) for key, msg in request.kwargs.items()}
         except Exception as e:
             return hist_pb2.Result(
                 success=False, message=f"Error deserializing request: {e!r}"
             )
         try:
             self.hist.fill(**kwargs)
-            logger.info(f"Filled histogram with {sum([nd.nbytes for nd in kwargs.values()]):,} bytes")
+            nbytes_filled = sum(
+                [nd.nbytes for nd in kwargs.values() if isinstance(nd, np.ndarray)]
+            )
+            logger.info(f"Filled histogram with {nbytes_filled:,} bytes")
             return hist_pb2.Result(
                 success=True,
                 message=f"Histogram filled {kwargs!r} successfully! Now is: {self.hist!r}",
@@ -71,7 +72,9 @@ class Histogrammer(hist_pb2_grpc.HistogrammerServicer):
 
 
 class Server:
-    def __init__(self, histogram: hist.Hist, port: int = 50051, max_workers: int = 1) -> None:
+    def __init__(
+        self, histogram: hist.Hist, port: int = 50051, max_workers: int = 1
+    ) -> None:
         self.port = port
         self.max_workers = max_workers
 
@@ -96,7 +99,9 @@ class Server:
 
     def start(self) -> None:
         self.server.start()
-        logger.info(f"Histogram server started, listening on {self.address} with max_workers={self.max_workers}")
+        logger.info(
+            f"Histogram server started, listening on {self.address} with max_workers={self.max_workers}"
+        )
 
     def stop(self, grace: float | None = None) -> None:
         self.server.stop(grace=grace)

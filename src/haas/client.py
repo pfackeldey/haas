@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import numpy as np
+import typing as tp
 import grpc
 from functools import cached_property
 from haas.protos import hist_pb2_grpc, hist_pb2
 
-from haas.serialize import serialize_ndarray
+from haas.serialize import serialize
 
 import logging
 
@@ -21,10 +21,10 @@ class HaaSClient:
         state = dict(self.__dict__)
         state.pop("channel", None)
         return state
-    
+
     def __enter__(self) -> HaaSClient:
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         del exc_type, exc_value, traceback  # unused
         self.channel.close()
@@ -43,10 +43,8 @@ class HaaSClient:
     def stub(self) -> hist_pb2_grpc.HistogrammerStub:
         return hist_pb2_grpc.HistogrammerStub(self.channel)
 
-    def fill(self, **kwargs: np.ndarray) -> hist_pb2.Result:
-        serialized_kwargs = {
-            key: serialize_ndarray(array) for key, array in kwargs.items()
-        }
+    def fill(self, **kwargs: tp.Any) -> hist_pb2.Result:
+        serialized_kwargs = {key: serialize(value) for key, value in kwargs.items()}
         request = hist_pb2.FillRequest(kwargs=serialized_kwargs)
         return self.stub.fill(request)
 
