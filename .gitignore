@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.python-version
+
+# Virtual environments
+.venv
+uv.lock
+
+# ruff
+.ruff_cache/
+
+# example output
+hist.coffea

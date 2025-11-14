@@ -1,0 +1,32 @@
+[build-system]
+requires = ["uv_build>=0.9.7,<0.10.0"]
+build-backend = "uv_build"
+
+
+[project]
+name = "haas"
+version = "0.1.0"
+description = "Histogramming as a Service"
+readme = "README.md"
+authors = [
+    { name = "pfackeldey", email = "fackeldey.peter@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "grpcio>=1.76.0",
+    "hist>=2.9.0",
+    "click>=8.3.0",
+    "cloudpickle>=3.1.2",
+    "fsspec>=2025.10.0",
+    "uhi>=1.0.0",
+    "lz4>=4.4.5",
+]
+
+
+[dependency-groups]
+dev = [
+    "grpcio-tools",
+]
+
+[project.scripts]
+haas-server = "haas.__main__:main"

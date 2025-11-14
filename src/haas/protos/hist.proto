@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+// The histogram service definition.
+service Histogrammer {
+    // Sends a filling request
+    rpc fill (FillRequest) returns (Result) {}
+    // Sends a flushing request
+    rpc flush (FlushRequest) returns (Result) {}
+}
+
+// The request message containing the values to fill the histogram.
+// This map is essentially **kwargs that is passed to histogram.fill(**kwargs)
+message FillRequest {
+    map<string, ndarray> kwargs = 1;
+}
+
+// The request message for flushing the histogram.
+message FlushRequest {
+    string destination = 1; // where to flush the histogram data
+}
+
+// The response message.
+message Result {
+    bool success = 1; // indicates if the operation was successful
+    string message = 2; // additional information or error message
+}
+
+message dtype {
+    enum Type {
+        // add more types as needed
+        DT_FLOAT32 = 0;
+        DT_FLOAT64 = 1;
+        DT_INT32 = 2;
+        DT_INT64 = 3;
+    }
+
+    Type type = 2;
+}
+
+message ndarray {
+    repeated int64 shape = 1;
+    dtype dtype = 2;
+    bytes data = 3;
+}
+
+
