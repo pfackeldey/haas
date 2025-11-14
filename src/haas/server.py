@@ -80,7 +80,6 @@ class Server:
             futures.ThreadPoolExecutor(max_workers=max_workers),
             compression=grpc.Compression.Gzip,
             options=[
-                ("grpc.max_send_message_length", 1 << 29),
                 ("grpc.max_receive_message_length", 1 << 29),
             ],
         )

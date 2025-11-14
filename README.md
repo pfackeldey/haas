@@ -13,8 +13,8 @@ Start gRPC server (or just `./example/start_server.sh`):
 ```shell
 haas-server --port 50051 --max-workers 1 --hist-ir "$(cat example/hist_ir.json)"
 # INFO:haas-server:Histogram setup successfully: Hist(
-#   Regular(50, -3, 3, name='x', label='Axis 0'),
-#   Regular(50, -3, 3, name='y', label='Axis 1'),
+#   Regular(50, -5, 5, name='x', label='X Axis'),
+#   Regular(50, -5, 5, name='y', label='Y Axis'),
 #   storage=Double())
 # INFO:haas-server:Histogram server started, listening on [::]:50051 with max_workers=1
 ```
