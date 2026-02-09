@@ -1,24 +1,30 @@
 from __future__ import annotations
 
-import logging
-import hist
-import uhi.io.json
+import asyncio
 import json
 from argparse import ArgumentParser
+
+import hist
+import uhi.io.json
+
 from haas.server import Server, logger
 
+# Coroutines to be invoked when the event loop is shutting down.
+_cleanup_coroutines = []
 
-def main():
+
+async def main() -> None:
     ap = ArgumentParser()
     ap.add_argument("-p", "--port", default=0, type=int)
-    ap.add_argument("-w", "--max-workers", default=1, type=int)
+    ap.add_argument("-t", "--n-threads", default=1, type=int)
     ap.add_argument(
         "--hist-ir", default=None, type=str, help="JSON Hist IR", required=True
     )
 
     args = ap.parse_args()
 
-    assert 0 <= args.port < 0xFFFF, "port must be between 0 and 65535"
+    if not 0 <= args.port < 0xFFFF:
+        raise ValueError("port must be between 0 and 65535")
 
     # load histogram from JSON IR
     hist_ir = json.loads(args.hist_ir, object_hook=uhi.io.json.object_hook)
@@ -27,10 +33,29 @@ def main():
     logger.info(f"Histogram setup successfully: {histogram}")
 
     # start server
-    server = Server(histogram=histogram, port=args.port, max_workers=args.max_workers)
-    server.start()
-    server.wait_for_termination()
+    server = Server(histogram=histogram, port=args.port, n_threads=args.n_threads)
+    await server.start()
+
+    async def server_graceful_shutdown():
+        logger.info("Starting graceful shutdown...")
+        # Shuts down the server with 5 seconds of grace period. During the
+        # grace period, the server won't accept new connections and allow
+        # existing RPCs to continue within the grace period.
+        await server.stop(5)
+
+    _cleanup_coroutines.append(server_graceful_shutdown())
+    await server.wait_for_termination()
+
+
+def run() -> None:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(main())
+    finally:
+        loop.run_until_complete(*_cleanup_coroutines)
+        loop.close()
 
 
 if __name__ == "__main__":
-    main()
+    run()

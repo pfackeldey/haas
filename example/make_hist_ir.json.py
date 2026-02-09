@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import hist
 import json
-import uhi.io.json
 
+import hist
+import uhi.io.json
 
 if __name__ == "__main__":
     # define example histogram that we fill remotely (see example/client.py)

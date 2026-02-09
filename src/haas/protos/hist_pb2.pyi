@@ -1,9 +1,13 @@
-from google.protobuf.internal import containers as _containers
-from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+from collections.abc import Iterable as _Iterable
+from collections.abc import Mapping as _Mapping
+from typing import ClassVar as _ClassVar
+from typing import Optional as _Optional
+from typing import Union as _Union
+
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from collections.abc import Iterable as _Iterable, Mapping as _Mapping
-from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -15,7 +19,12 @@ class FillRequest(_message.Message):
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
         value: Value
-        def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[Value, _Mapping]] = ...) -> None: ...
+        def __init__(
+            self,
+            key: _Optional[str] = ...,
+            value: _Optional[_Union[Value, _Mapping]] = ...,
+        ) -> None: ...
+
     KWARGS_FIELD_NUMBER: _ClassVar[int]
     kwargs: _containers.MessageMap[str, Value]
     def __init__(self, kwargs: _Optional[_Mapping[str, Value]] = ...) -> None: ...
@@ -26,7 +35,7 @@ class FlushRequest(_message.Message):
     destination: str
     def __init__(self, destination: _Optional[str] = ...) -> None: ...
 
-class Result(_message.Message):
+class FillResponse(_message.Message):
     __slots__ = ("success", "message")
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
@@ -34,38 +43,60 @@ class Result(_message.Message):
     message: str
     def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
 
-class dtype(_message.Message):
+class FlushResponse(_message.Message):
+    __slots__ = ("success", "message")
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    message: str
+    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class Dtype(_message.Message):
     __slots__ = ("type",)
     class Type(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
-        DT_FLOAT32: _ClassVar[dtype.Type]
-        DT_FLOAT64: _ClassVar[dtype.Type]
-        DT_INT32: _ClassVar[dtype.Type]
-        DT_INT64: _ClassVar[dtype.Type]
-    DT_FLOAT32: dtype.Type
-    DT_FLOAT64: dtype.Type
-    DT_INT32: dtype.Type
-    DT_INT64: dtype.Type
-    TYPE_FIELD_NUMBER: _ClassVar[int]
-    type: dtype.Type
-    def __init__(self, type: _Optional[_Union[dtype.Type, str]] = ...) -> None: ...
+        DT_FLOAT32: _ClassVar[Dtype.Type]
+        DT_FLOAT64: _ClassVar[Dtype.Type]
+        DT_INT32: _ClassVar[Dtype.Type]
+        DT_INT64: _ClassVar[Dtype.Type]
 
-class ndarray(_message.Message):
+    DT_FLOAT32: Dtype.Type
+    DT_FLOAT64: Dtype.Type
+    DT_INT32: Dtype.Type
+    DT_INT64: Dtype.Type
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    type: Dtype.Type
+    def __init__(self, type: _Optional[_Union[Dtype.Type, str]] = ...) -> None: ...
+
+class Ndarray(_message.Message):
     __slots__ = ("shape", "dtype", "data")
     SHAPE_FIELD_NUMBER: _ClassVar[int]
     DTYPE_FIELD_NUMBER: _ClassVar[int]
     DATA_FIELD_NUMBER: _ClassVar[int]
     shape: _containers.RepeatedScalarFieldContainer[int]
-    dtype: dtype
+    dtype: Dtype
     data: bytes
-    def __init__(self, shape: _Optional[_Iterable[int]] = ..., dtype: _Optional[_Union[dtype, _Mapping]] = ..., data: _Optional[bytes] = ...) -> None: ...
+    def __init__(
+        self,
+        shape: _Optional[_Iterable[int]] = ...,
+        dtype: _Optional[_Union[Dtype, _Mapping]] = ...,
+        data: _Optional[bytes] = ...,
+    ) -> None: ...
 
 class Value(_message.Message):
-    __slots__ = ("array_value", "string_value", "int_value")
+    __slots__ = ("array_value", "string_value", "int_value", "bool_value")
     ARRAY_VALUE_FIELD_NUMBER: _ClassVar[int]
     STRING_VALUE_FIELD_NUMBER: _ClassVar[int]
     INT_VALUE_FIELD_NUMBER: _ClassVar[int]
-    array_value: ndarray
+    BOOL_VALUE_FIELD_NUMBER: _ClassVar[int]
+    array_value: Ndarray
     string_value: str
     int_value: int
-    def __init__(self, array_value: _Optional[_Union[ndarray, _Mapping]] = ..., string_value: _Optional[str] = ..., int_value: _Optional[int] = ...) -> None: ...
+    bool_value: bool
+    def __init__(
+        self,
+        array_value: _Optional[_Union[Ndarray, _Mapping]] = ...,
+        string_value: _Optional[str] = ...,
+        int_value: _Optional[int] = ...,
+        bool_value: bool = ...,
+    ) -> None: ...

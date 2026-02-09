@@ -4,51 +4,50 @@
 # source: hist.proto
 # Protobuf Python Version: 6.31.1
 """Generated protocol buffer code."""
+
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+
 _runtime_version.ValidateProtobufRuntimeVersion(
-    _runtime_version.Domain.PUBLIC,
-    6,
-    31,
-    1,
-    '',
-    'hist.proto'
+    _runtime_version.Domain.PUBLIC, 6, 31, 1, "", "hist.proto"
 )
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-
-
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nhist.proto\"n\n\x0b\x46illRequest\x12(\n\x06kwargs\x18\x01 \x03(\x0b\x32\x18.FillRequest.KwargsEntry\x1a\x35\n\x0bKwargsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x15\n\x05value\x18\x02 \x01(\x0b\x32\x06.Value:\x02\x38\x01\"#\n\x0c\x46lushRequest\x12\x13\n\x0b\x64\x65stination\x18\x01 \x01(\t\"*\n\x06Result\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"f\n\x05\x64type\x12\x19\n\x04type\x18\x02 \x01(\x0e\x32\x0b.dtype.Type\"B\n\x04Type\x12\x0e\n\nDT_FLOAT32\x10\x00\x12\x0e\n\nDT_FLOAT64\x10\x01\x12\x0c\n\x08\x44T_INT32\x10\x02\x12\x0c\n\x08\x44T_INT64\x10\x03\"=\n\x07ndarray\x12\r\n\x05shape\x18\x01 \x03(\x03\x12\x15\n\x05\x64type\x18\x02 \x01(\x0b\x32\x06.dtype\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"^\n\x05Value\x12\x1f\n\x0b\x61rray_value\x18\x01 \x01(\x0b\x32\x08.ndarrayH\x00\x12\x16\n\x0cstring_value\x18\x02 \x01(\tH\x00\x12\x13\n\tint_value\x18\x03 \x01(\x03H\x00\x42\x07\n\x05value2R\n\x0cHistogrammer\x12\x1f\n\x04\x66ill\x12\x0c.FillRequest\x1a\x07.Result\"\x00\x12!\n\x05\x66lush\x12\r.FlushRequest\x1a\x07.Result\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
+    b'\n\nhist.proto"n\n\x0b\x46illRequest\x12(\n\x06kwargs\x18\x01 \x03(\x0b\x32\x18.FillRequest.KwargsEntry\x1a\x35\n\x0bKwargsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x15\n\x05value\x18\x02 \x01(\x0b\x32\x06.Value:\x02\x38\x01"#\n\x0c\x46lushRequest\x12\x13\n\x0b\x64\x65stination\x18\x01 \x01(\t"0\n\x0c\x46illResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t"1\n\rFlushResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t"f\n\x05\x44type\x12\x19\n\x04type\x18\x02 \x01(\x0e\x32\x0b.Dtype.Type"B\n\x04Type\x12\x0e\n\nDT_FLOAT32\x10\x00\x12\x0e\n\nDT_FLOAT64\x10\x01\x12\x0c\n\x08\x44T_INT32\x10\x02\x12\x0c\n\x08\x44T_INT64\x10\x03"=\n\x07Ndarray\x12\r\n\x05shape\x18\x01 \x03(\x03\x12\x15\n\x05\x64type\x18\x02 \x01(\x0b\x32\x06.Dtype\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c"t\n\x05Value\x12\x1f\n\x0b\x61rray_value\x18\x01 \x01(\x0b\x32\x08.NdarrayH\x00\x12\x16\n\x0cstring_value\x18\x02 \x01(\tH\x00\x12\x13\n\tint_value\x18\x03 \x01(\x03H\x00\x12\x14\n\nbool_value\x18\x04 \x01(\x08H\x00\x42\x07\n\x05value2f\n\x13HistogrammerService\x12%\n\x04\x46ill\x12\x0c.FillRequest\x1a\r.FillResponse"\x00\x12(\n\x05\x46lush\x12\r.FlushRequest\x1a\x0e.FlushResponse"\x00\x62\x06proto3'
+)
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
-_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hist_pb2', _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "hist_pb2", _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
-  _globals['_FILLREQUEST_KWARGSENTRY']._loaded_options = None
-  _globals['_FILLREQUEST_KWARGSENTRY']._serialized_options = b'8\001'
-  _globals['_FILLREQUEST']._serialized_start=14
-  _globals['_FILLREQUEST']._serialized_end=124
-  _globals['_FILLREQUEST_KWARGSENTRY']._serialized_start=71
-  _globals['_FILLREQUEST_KWARGSENTRY']._serialized_end=124
-  _globals['_FLUSHREQUEST']._serialized_start=126
-  _globals['_FLUSHREQUEST']._serialized_end=161
-  _globals['_RESULT']._serialized_start=163
-  _globals['_RESULT']._serialized_end=205
-  _globals['_DTYPE']._serialized_start=207
-  _globals['_DTYPE']._serialized_end=309
-  _globals['_DTYPE_TYPE']._serialized_start=243
-  _globals['_DTYPE_TYPE']._serialized_end=309
-  _globals['_NDARRAY']._serialized_start=311
-  _globals['_NDARRAY']._serialized_end=372
-  _globals['_VALUE']._serialized_start=374
-  _globals['_VALUE']._serialized_end=468
-  _globals['_HISTOGRAMMER']._serialized_start=470
-  _globals['_HISTOGRAMMER']._serialized_end=552
+    DESCRIPTOR._loaded_options = None
+    _globals["_FILLREQUEST_KWARGSENTRY"]._loaded_options = None
+    _globals["_FILLREQUEST_KWARGSENTRY"]._serialized_options = b"8\001"
+    _globals["_FILLREQUEST"]._serialized_start = 14
+    _globals["_FILLREQUEST"]._serialized_end = 124
+    _globals["_FILLREQUEST_KWARGSENTRY"]._serialized_start = 71
+    _globals["_FILLREQUEST_KWARGSENTRY"]._serialized_end = 124
+    _globals["_FLUSHREQUEST"]._serialized_start = 126
+    _globals["_FLUSHREQUEST"]._serialized_end = 161
+    _globals["_FILLRESPONSE"]._serialized_start = 163
+    _globals["_FILLRESPONSE"]._serialized_end = 211
+    _globals["_FLUSHRESPONSE"]._serialized_start = 213
+    _globals["_FLUSHRESPONSE"]._serialized_end = 262
+    _globals["_DTYPE"]._serialized_start = 264
+    _globals["_DTYPE"]._serialized_end = 366
+    _globals["_DTYPE_TYPE"]._serialized_start = 300
+    _globals["_DTYPE_TYPE"]._serialized_end = 366
+    _globals["_NDARRAY"]._serialized_start = 368
+    _globals["_NDARRAY"]._serialized_end = 429
+    _globals["_VALUE"]._serialized_start = 431
+    _globals["_VALUE"]._serialized_end = 547
+    _globals["_HISTOGRAMMERSERVICE"]._serialized_start = 549
+    _globals["_HISTOGRAMMERSERVICE"]._serialized_end = 651
 # @@protoc_insertion_point(module_scope)

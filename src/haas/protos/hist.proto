@@ -1,58 +1,61 @@
 syntax = "proto3";
 
 // The histogram service definition.
-service Histogrammer {
-    // Sends a filling request
-    rpc fill (FillRequest) returns (Result) {}
-    // Sends a flushing request
-    rpc flush (FlushRequest) returns (Result) {}
+service HistogrammerService {
+  // Sends a filling request
+  rpc Fill(FillRequest) returns (FillResponse) {}
+  // Sends a flushing request
+  rpc Flush(FlushRequest) returns (FlushResponse) {}
 }
 
 // The request message containing the values to fill the histogram.
 // This map is essentially **kwargs that is passed to histogram.fill(**kwargs)
 message FillRequest {
-    map<string, Value> kwargs = 1;
+  map<string, Value> kwargs = 1;
 }
 
 // The request message for flushing the histogram.
 message FlushRequest {
-    string destination = 1; // where to flush the histogram data
+  string destination = 1; // where to flush the histogram data
 }
 
-// The response message.
-message Result {
-    bool success = 1; // indicates if the operation was successful
-    string message = 2; // additional information or error message
+// The response messages
+message FillResponse {
+  bool success = 1; // indicates if the operation was successful
+  string message = 2; // additional information or error message
+}
+
+// is there a better way to re-use the result messages?
+message FlushResponse {
+  bool success = 1; // indicates if the operation was successful
+  string message = 2; // additional information or error message
 }
 
 // Data type representation (just a small subset for now)
-message dtype {
-    enum Type {
-        // add more types as needed
-        DT_FLOAT32 = 0;
-        DT_FLOAT64 = 1;
-        DT_INT32 = 2;
-        DT_INT64 = 3;
-    }
+message Dtype {
+  enum Type {
+    // add more types as needed
+    DT_FLOAT32 = 0;
+    DT_FLOAT64 = 1;
+    DT_INT32 = 2;
+    DT_INT64 = 3;
+  }
 
-    Type type = 2;
+  Type type = 2;
 }
-
 
 // A simple representation of a NumPy ndarray (we're ignoring endianness and other complexities for brevity)
-message ndarray {
-    repeated int64 shape = 1;
-    dtype dtype = 2;
-    bytes data = 3;
+message Ndarray {
+  repeated int64 shape = 1;
+  Dtype dtype = 2;
+  bytes data = 3;
 }
-
 
 message Value {
-    oneof value {
-        ndarray array_value = 1; // for array values (e.g., regular/variable/integer axes)
-        string string_value = 2; // for string values (e.g., str category axes)
-        int64 int_value = 3;   // for integer values (e.g., int category axes)
-        bool bool_value = 4;  // for boolean values (e.g., boolean axes axes)
-    }
+  oneof value {
+    Ndarray array_value = 1; // for array values (e.g., regular/variable/integer axes)
+    string string_value = 2; // for string values (e.g., str category axes)
+    int64 int_value = 3; // for integer values (e.g., int category axes)
+    bool bool_value = 4; // for boolean values (e.g., boolean axes axes)
+  }
 }
-
