@@ -55,7 +55,7 @@ class Histogrammer(hist_pb2_grpc.HistogrammerServiceServicer):
         del context  # unused
 
         destination = request.destination
-        if not destination.endswith(("h5", ".hdf5")):
+        if not destination.endswith((".h5", ".hdf5")):
             return hist_pb2.FlushResponse(
                 success=False,
                 message=f"Invalid destination: {destination}, needs to be a hdf5 file, e.g., 'hist.hdf5'.",
