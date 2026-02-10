@@ -11,13 +11,13 @@ See `example/`.
 
 Start gRPC server (or just `./example/start_server.sh`):
 ```shell
-haas-server --port 50051 --max-workers 1 --hist-ir "$(cat example/hist_ir.json)"
+haas-server --port 50051 --n-threads 4 --hist-ir "$(cat example/hist_ir.json)"
 # INFO:haas-server:Histogram setup successfully: Hist(
 #   Regular(10, -2, 2, name='x', label='X Axis'),
 #   Regular(10, -2, 2, name='y', label='Y Axis'),
 #   StrCategory(['data', 'drell-yan'], overflow=False, name='dataset', label='Dataset'),
 #   storage=Weight()) # Sum: WeightedSum(value=0, variance=0)
-# INFO:haas-server:Histogram server started, listening on [::]:50051 with max_workers=1
+# INFO:haas-server:Histogram server started, listening on [::]:50051 with n_threads=4
 ```
 
 Run example client:
