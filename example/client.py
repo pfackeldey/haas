@@ -25,35 +25,35 @@ if __name__ == "__main__":
 
         print("Remote hist initialized:", remote_hist)
 
-        # fill histogram remotely, returns futures
-        response_future = remote_hist.fill(
+        # fill histogram remotely (blocking operation)
+        response = remote_hist.fill(
             x=np.random.normal(size=1_000_000).astype(np.float64),
             y=np.random.normal(size=1_000_000).astype(np.float64),
             dataset="data",
             weight=np.ones(1_000_000, dtype=np.float64),
         )
-        print(f"Histogram remote_hist received: {response_future}")
+        print(f"Histogram remote_hist received: {response}")
 
         print("Snapshotting current hist", remote_hist.snapshot(drop_from_server=False))
 
         # fill histogram remotely again with different dataset
-        response_future = remote_hist.fill(
+        response = remote_hist.fill(
             x=np.random.normal(size=1_000_000).astype(np.float64),
             y=np.random.normal(size=1_000_000).astype(np.float64),
             dataset="drell-yan",
             weight=np.ones(1_000_000, dtype=np.float64),
         )
-        print(f"Histogram remote_hist received: {response_future}")
+        print(f"Histogram remote_hist received: {response}")
 
         # fill histogram remotely again with different dataset (something that triggers axis growth)
-        response_future = remote_hist.fill(
+        response = remote_hist.fill(
             x=np.random.normal(size=1_000_000).astype(np.float64),
             y=np.random.normal(size=1_000_000).astype(np.float64),
             dataset="ttbar",
             weight=np.ones(1_000_000, dtype=np.float64),
         )
-        print(f"Histogram remote_hist received: {response_future}")
+        print(f"Histogram remote_hist received: {response}")
 
         # flush histogram remotely to file
-        response_future = remote_hist.flush(destination="hist.h5")
-        print(f"Histogram remote_hist received: {response_future.message}")
+        response = remote_hist.flush(destination="hist.h5")
+        print(f"Histogram remote_hist received: {response.message}")
